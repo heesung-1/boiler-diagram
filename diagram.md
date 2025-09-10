@@ -1,11 +1,13 @@
+# Boiler Recommendation Logic
+
+```mermaid
 flowchart TD
   S([Start])
   S --> Q5{Q5. Drain present?}
   Q5 -- Yes --> T1[Type = Condensing]
   Q5 -- No/Unknown --> T2[Type = Non-condensing]
 
-  %% Floor area
-  T1 --> Q2[Q2. Floor area (pyeong)]
+  T1 --> Q2
   T2 --> Q2
   Q2 --> A1[<=20]
   Q2 --> A2[21-25]
@@ -14,7 +16,6 @@ flowchart TD
   Q2 --> A5[36-40]
   Q2 --> A6[>40]
 
-  %% Bathrooms
   A1 --> Q4{Q4. Bathrooms?}
   A2 --> Q4
   A3 --> Q4
@@ -25,22 +26,19 @@ flowchart TD
   Q4 -- ">=2" --> B2[Use LUT table (2+ bathrooms)]
   Q4 -- "1" --> B1[Use LUT table (1 bathroom)]
 
-  %% Capacity lookup
   B1 --> C[Lookup capacity from table]
   B2 --> C
 
-  %% Tags / scoring
-  C --> Q3{Q3. Discomfort tags?}
+  C --> Q3{Q3. Discomfort tags}
   Q3 --> SCORE[Score models by tag match]
 
-  %% Brand picks (1 each)
   SCORE --> RINN[Pick 1 model in Rinnai]
   SCORE --> KIT[Pick 1 model in Kiturami]
   SCORE --> KYU[Pick 1 model in Kyungdong]
 
-  %% Output
   RINN --> OUT1[Output #1: Rinnai (top)]
   KIT --> OUT2[Output #2: Kiturami]
   KYU --> OUT3[Output #3: Kyungdong]
+
 
 
