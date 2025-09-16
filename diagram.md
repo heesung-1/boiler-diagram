@@ -1,42 +1,47 @@
-```mermaid
 flowchart TD
-  S([Start])
-  S --> Q5{Q5 drain present}
-  Q5 -- Yes --> T1[Type Condensing]
-  Q5 -- No or Unknown --> T2[Type Noncondensing]
+  S([시작])
+  S --> Q5{Q5 배수구 여부}
+  Q5 -- 있음/모름 --> T1[콘덴싱 보일러]
+  Q5 -- 없음 --> T2[일반 보일러]
 
-  T1 --> Q2[Q2 floor area pyeong]
-  T2 --> Q2
-  Q2 --> A1[<=20 pyeong]
-  Q2 --> A2[21-25 pyeong]
-  Q2 --> A3[26-30 pyeong]
-  Q2 --> A4[31-35 pyeong]
-  Q2 --> A5[36-40 pyeong]
-  Q2 --> A6[>40 pyeong]
+  T1 --> Q3[Q3 구매 요인 선택]
+  T2 --> Q3
 
-  A1 --> Q4{Q4 bathrooms}
+  Q3 --> Q2[Q2 평형 선택]
+  Q2 --> A1[20평 이하]
+  Q2 --> A2[21~25평]
+  Q2 --> A3[26~30평]
+  Q2 --> A4[31~35평]
+  Q2 --> A5[36~40평]
+  Q2 --> A6[40평 초과]
+
+  A1 --> Q4{Q4 화장실 개수}
   A2 --> Q4
   A3 --> Q4
   A4 --> Q4
   A5 --> Q4
   A6 --> Q4
 
-  Q4 -- "2 or more" --> B2[Use LUT 2plus baths]
-  Q4 -- "1" --> B1[Use LUT 1 bath]
+  Q4 -- 1개 --> B1[용량 LUT (1)]
+  Q4 -- 2개 이상 --> B2[용량 LUT (2plus)]
 
-  B1 --> C[Lookup capacity table]
-  B2 --> C
+  B1 --> LUT[용량 결정]
+  B2 --> LUT
 
-  C --> Q3{Q3 discomfort tags}
-  Q3 --> SCORE[Score models by tag match]
+  LUT --> SCORE[브랜드별 모델 스코어링\n(태그 매칭 + 우선모델 우선)]
+  SCORE --> RINN[린나이 모델 1개 선택]
+  SCORE --> KIT[귀뚜라미 모델 1개 선택]
+  SCORE --> KYU[경동 모델 1개 선택]
 
-  SCORE --> RINN[Pick 1 in Rinnai]
-  SCORE --> KIT[Pick 1 in Kiturami]
-  SCORE --> KYU[Pick 1 in Kyungdong]
+  RINN --> OUT1[결과 카드: 린나이]
+  KIT --> OUT2[결과 카드: 귀뚜라미]
+  KYU --> OUT3[결과 카드: 경동]
 
-  RINN --> OUT1[Output Rinnai top]
-  KIT --> OUT2[Output Kiturami]
-  KYU --> OUT3[Output Kyungdong]
+  OUT1 --> FINAL[최종 결과: 3개 카드 출력\n(린나이 > 귀뚜라미 > 경동)]
+  OUT2 --> FINAL
+  OUT3 --> FINAL
+
+
 
 
 
